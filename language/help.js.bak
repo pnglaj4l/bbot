@@ -112,6 +112,8 @@ return`
 ├ ${prefix}ytsearch [query]
 ├ ${prefix}ringtone [query]
 ├ ${prefix}brainly [teks]
+├ ${prefix}lirik [lagu]
+└───────
 
 ┌── 「 *Games Menu* 」
 ├ ${prefix}family100
@@ -191,6 +193,15 @@ return`
 ├ ${prefix}robot
 ├ ${prefix}slow
 ├ ${prefix}tupai
+└───────
+
+┌── 「 *Big Thanks To* 」
+├ DikaArdnt
+├ Zeeoneofc
+├ FatihArridho
+├ Sanzy
+├ Yoga
+├ RiychDwayne
 └───────
 `
 }
