@@ -1,9 +1,3 @@
-/*
-   * Create By Dika Ardnt.
-   * Contact Me on wa.me/6288292024190
-   * Follow https://github.com/DikaArdnt
-*/
-
 // Menu
 exports.menu = () => {
 	return``
@@ -27,6 +21,7 @@ return`
 
 ┌── 「 *Info Menu* 」
 ├ ${prefix}ping
+├ ${prefix}speedtest
 ├ ${prefix}owner
 ├ ${prefix}delete
 ├ ${prefix}infochat
@@ -34,6 +29,19 @@ return`
 ├ ${prefix}listpc
 ├ ${prefix}listgc
 ├ ${prefix}listonline
+└───────
+
+┌── 「 *Rpg Menu* 」
+├ ${prefix}berburu
+├ ${prefix}mancing
+├ ${prefix}menambang
+├ ${prefix}mining
+├ ${prefix}heal
+├ ${prefix}profile
+├ ${prefix}inventory
+├ ${prefix}leaderboard
+├ ${prefix}buy
+├ ${prefix}sell
 └───────
 
 ┌── 「 *Group Menu* 」
@@ -68,7 +76,7 @@ return`
 ├ ${prefix}emojimix [em1 + em2]
 ├ ${prefix}tovideo [reply sticker]
 ├ ${prefix}togif [reply sticker]
-├ ${prefix}tourl [reply gambar/video/gif/dll]
+├ ${prefix}tourl [reply gambar/video] 
 ├ ${prefix}tovn [reply vid/audio]
 ├ ${prefix}tomp3 [reply vid/audio]
 ├ ${prefix}toaudio [reply vid/audio]
@@ -84,26 +92,22 @@ return`
 └───────
 
 ┌── 「 *Downloader Menu* 」
-├ ${prefix}tiktoknowm [url]
-├ ${prefix}tiktokwm [url]
-├ ${prefix}tiktokmp3 [url]
+├ ${prefix}tiktokvid [url]
+├ ${prefix}tiktokaudio [url]
 ├ ${prefix}instagram [url]
 ├ ${prefix}twitter [url]
-├ ${prefix}twittermp3 [url]
 ├ ${prefix}facebook [url]
-├ ${prefix}pinterestdl [url]
-├ ${prefix}ytmp3 [url]
-├ ${prefix}ytmp4 [url]
-├ ${prefix}getmusic [query]
-├ ${prefix}getvideo [query]
-├ ${prefix}umma [url]
-├ ${prefix}joox [query]
-├ ${prefix}soundcloud [url]
+├ ${prefix}ytmp3 [url]  
+├ ${prefix}ytmp4 [url]  
+├ ${prefix}getmusic [query]  
+├ ${prefix}getvideo [query]  
+├ ${prefix}umma [url]  
+├ ${prefix}soundcloud [url] 
+├ ${prefix}pixiv [id]
 └───────
 
 ┌── 「 *Search Menu* 」
 ├ ${prefix}play [query]
-├ ${prefix}yts [query]
 ├ ${prefix}google [query]
 ├ ${prefix}gimage [query]
 ├ ${prefix}pinterest [query]
@@ -113,6 +117,12 @@ return`
 ├ ${prefix}ringtone [query]
 ├ ${prefix}brainly [teks]
 ├ ${prefix}lirik [lagu]
+├ ${prefix}happymod [apk]
+├ ${prefix}spacksearch [teks]
+├ ${prefix}gcwasearch [teks]
+├ ${prefix}sfilesearch [file]
+├ ${prefix}quotes [teks]
+├ ${prefix}chordgitar [lagu]
 └───────
 
 ┌── 「 *Games Menu* 」
@@ -160,6 +170,27 @@ return`
 ├ ${prefix}masasubur
 ├ ${prefix}zodiak
 ├ ${prefix}shio
+└───────
+
+┌── 「 *NSFW Menu* 」
+├ ${prefix}blowjob
+├ ${prefix}ahegao
+├ ${prefix}ass
+├ ${prefix}bdsm
+├ ${prefix}cuckold
+├ ${prefix}cum
+├ ${prefix}ero
+├ ${prefix}femdom
+├ ${prefix}foot
+├ ${prefix}gangbang
+├ ${prefix}glasses
+├ ${prefix}jahy
+├ ${prefix}masturbation
+├ ${prefix}neko
+├ ${prefix}orgy
+├ ${prefix}panties
+├ ${prefix}pussy
+├ ${prefix}neko2
 └───────
 
 ┌── 「 *Database Menu* 」

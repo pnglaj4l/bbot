@@ -3,7 +3,7 @@
     "6285158060230@s.whatsapp.net": {
       "afkTime": -1,
       "afkReason": "",
-      "limit": "Infinity"
+      "limit": 999999
     }
   },
   "chats": {

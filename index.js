@@ -1,11 +1,5 @@
-/*
-   * Create By Dika Ardnt.
-   * Contact Me on wa.me/6288292024190
-   * Follow https://github.com/DikaArdnt
-*/
-
 require('./settings')
-const { default: chikaConnect, useSingleFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@adiwajshing/baileys")
+const { default: bbotConnect, useSingleFileAuthState, DisconnectReason, fetchLatestBaileysVersion, generateForwardMessageContent, prepareWAMessageMedia, generateWAMessageFromContent, generateMessageID, downloadContentFromMessage, makeInMemoryStore, jidDecode, proto } = require("@adiwajshing/baileys")
 const { state, saveState } = useSingleFileAuthState(`./${sessionName}.json`)
 const pino = require('pino')
 const { Boom } = require('@hapi/boom')
@@ -37,7 +31,7 @@ global.db = new Low(
   /https?:\/\//.test(opts['db'] || '') ?
     new cloudDBAdapter(opts['db']) : /mongodb/.test(opts['db']) ?
       new mongoDB(opts['db']) :
-      new JSONFile(`src/database.json`)
+      new JSONFile(`database/database.json`)
 )
 global.db.data = {
     users: {},
@@ -46,6 +40,7 @@ global.db.data = {
     game: {},
     settings: {},
     others: {},
+    sticker: {},
     ...(global.db.data || {})
 }
 
@@ -54,45 +49,99 @@ if (global.db) setInterval(async () => {
     if (global.db.data) await global.db.write()
   }, 30 * 1000)
 
-async function startchika() {
-    const chika = chikaConnect({
+async function startbbot() {
+    const bbot = bbotConnect({
         logger: pino({ level: 'silent' }),
         printQRInTerminal: true,
-        browser: ['Chika Multi Device','Safari','1.0.0'],
+        browser: ['B-BOT MULTIDEVICE BY @PNGLAJ4L','Safari','1.0.0'],
         auth: state
     })
 
-    store.bind(chika.ev)
+    store.bind(bbot.ev)
     
     // anticall auto block
-    chika.ws.on('CB:call', async (json) => {
+    bbot.ws.on('CB:call', async (json) => {
     const callerId = json.content[0].attrs['call-creator']
     if (json.content[0].tag == 'offer') {
-    let pa7rick = await chika.sendContact(callerId, global.owner)
-    chika.sendMessage(callerId, { text: `Sistem otomatis block!\nJangan menelpon bot!\nSilahkan Hubungi Owner Untuk Dibuka !`}, { quoted : pa7rick })
+    let pa7rick = await bbot.sendContact(callerId, global.owner)
+    bbot.sendMessage(callerId, { text: `📞 *TELEFON TERDETEKSI* 📞\nMaaf, anda akan diblokir karena menelepon BOT! Kontak admin untuk membuka blokiran! Terimakasih.`}, { quoted : pa7rick })
     await sleep(8000)
-    await chika.updateBlockStatus(callerId, "block")
+    await bbot.updateBlockStatus(callerId, "block")
     }
     })
 
-    chika.ev.on('messages.upsert', async chatUpdate => {
+    bbot.ev.on('messages.upsert', async chatUpdate => {
         //console.log(JSON.stringify(chatUpdate, undefined, 2))
         try {
         mek = chatUpdate.messages[0]
         if (!mek.message) return
         mek.message = (Object.keys(mek.message)[0] === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
         if (mek.key && mek.key.remoteJid === 'status@broadcast') return
-        if (!chika.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
+        if (!bbot.public && !mek.key.fromMe && chatUpdate.type === 'notify') return
         if (mek.key.id.startsWith('BAE5') && mek.key.id.length === 16) return
-        m = smsg(chika, mek, store)
-        require("./chika")(chika, m, chatUpdate, store)
+        m = smsg(bbot, mek, store)
+        require("./bbot")(bbot, m, chatUpdate, store)
+        } catch (err) {
+            console.log(err)
+        }
+    })
+    
+    // Group Update
+    bbot.ev.on('groups.update', async pea => {
+       //console.log(pea)
+    // Get Profile Picture Group
+       try {
+       ppgc = await bbot.profilePictureUrl(pea[0].id, 'image')
+       } catch {
+       ppgc = 'https://shortlink.bbotarridho.my.id/rg1oT'
+       }
+       let wm_fatih = { url : ppgc }
+       if (pea[0].announce == true) {
+       bbot.send5ButImg(pea[0].id, `「 Group Settings Change 」\n\nGroup telah ditutup oleh admin, Sekarang hanya admin yang dapat mengirim pesan !`, `Group Settings Change Message`, wm_fatih, [])
+       } else if(pea[0].announce == false) {
+       bbot.send5ButImg(pea[0].id, `「 Group Settings Change 」\n\nGroup telah dibuka oleh admin, Sekarang peserta dapat mengirim pesan !`, `Group Settings Change Message`, wm_fatih, [])
+       } else if (pea[0].restrict == true) {
+       bbot.send5ButImg(pea[0].id, `「 Group Settings Change 」\n\nInfo group telah dibatasi, Sekarang hanya admin yang dapat mengedit info group !`, `Group Settings Change Message`, wm_fatih, [])
+       } else if (pea[0].restrict == false) {
+       bbot.send5ButImg(pea[0].id, `「 Group Settings Change 」\n\nInfo group telah dibuka, Sekarang peserta dapat mengedit info group !`, `Group Settings Change Message`, wm_fatih, [])
+       } else {
+       bbot.send5ButImg(pea[0].id, `「 Group Settings Change 」\n\nGroup Subject telah diganti menjadi *${pea[0].subject}*`, `Group Settings Change Message`, wm_fatih, [])
+     }
+    })
+
+    bbot.ev.on('group-participants.update', async (anu) => {
+        console.log(anu)
+        try {
+            let metadata = await bbot.groupMetadata(anu.id)
+            let participants = anu.participants
+            for (let num of participants) {
+                // Get Profile Picture User
+                try {
+                    ppuser = await bbot.profilePictureUrl(num, 'image')
+                } catch {
+                    ppuser = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                }
+
+                // Get Profile Picture Group
+                try {
+                    ppgroup = await bbot.profilePictureUrl(anu.id, 'image')
+                } catch {
+                    ppgroup = 'https://i0.wp.com/www.gambarunik.id/wp-content/uploads/2019/06/Top-Gambar-Foto-Profil-Kosong-Lucu-Tergokil-.jpg'
+                }
+
+                if (anu.action == 'add') {
+                    bbot.sendMessage(anu.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `「*NEW MEMBER*」\n*Halo @${num.split("@")[0]} Selamat Datang Di Group ${metadata.subject} !* 😆\n Semoga Betah~ 😊` })
+                } else if (anu.action == 'remove') {
+                    bbot.sendMessage(anu.id, { image: { url: ppuser }, contextInfo: { mentionedJid: [num] }, caption: `「*LEAVING GROUP*」\n*Selamat Tinggal @${num.split("@")[0]} Dari ${metadata.subject}* 👋` })
+                }
+            }
         } catch (err) {
             console.log(err)
         }
     })
 	
     // Setting
-    chika.decodeJid = (jid) => {
+    bbot.decodeJid = (jid) => {
         if (!jid) return jid
         if (/:\d+@/gi.test(jid)) {
             let decode = jidDecode(jid) || {}
@@ -100,44 +149,44 @@ async function startchika() {
         } else return jid
     }
     
-    chika.ev.on('contacts.update', update => {
+    bbot.ev.on('contacts.update', update => {
         for (let contact of update) {
-            let id = chika.decodeJid(contact.id)
+            let id = bbot.decodeJid(contact.id)
             if (store && store.contacts) store.contacts[id] = { id, name: contact.notify }
         }
     })
 
-    chika.getName = (jid, withoutContact  = false) => {
-        id = chika.decodeJid(jid)
-        withoutContact = chika.withoutContact || withoutContact 
+    bbot.getName = (jid, withoutContact  = false) => {
+        id = bbot.decodeJid(jid)
+        withoutContact = bbot.withoutContact || withoutContact 
         let v
         if (id.endsWith("@g.us")) return new Promise(async (resolve) => {
             v = store.contacts[id] || {}
-            if (!(v.name || v.subject)) v = chika.groupMetadata(id) || {}
+            if (!(v.name || v.subject)) v = bbot.groupMetadata(id) || {}
             resolve(v.name || v.subject || PhoneNumber('+' + id.replace('@s.whatsapp.net', '')).getNumber('international'))
         })
         else v = id === '0@s.whatsapp.net' ? {
             id,
             name: 'WhatsApp'
-        } : id === chika.decodeJid(chika.user.id) ?
-            chika.user :
+        } : id === bbot.decodeJid(bbot.user.id) ?
+            bbot.user :
             (store.contacts[id] || {})
             return (withoutContact ? '' : v.name) || v.subject || v.verifiedName || PhoneNumber('+' + jid.replace('@s.whatsapp.net', '')).getNumber('international')
     }
     
-    chika.sendContact = async (jid, kon, quoted = '', opts = {}) => {
+    bbot.sendContact = async (jid, kon, quoted = '', opts = {}) => {
 	let list = []
 	for (let i of kon) {
 	    list.push({
-	    	displayName: await chika.getName(i + '@s.whatsapp.net'),
+	    	displayName: await bbot.getName(i + '@s.whatsapp.net'),
 	    	vcard: `BEGIN:VCARD\nVERSION:3.0\nN:${ownername}\nitem1.TEL;waid=${i}:${i}\nitem1.X-ABLabel:Ponsel\nitem2.EMAIL;type=INTERNET:${email}\nitem2.X-ABLabel:Email\nitem3.URL:${ig}\nitem3.X-ABLabel:Instagram\nitem4.ADR:;;${region};;;;\nitem4.X-ABLabel:Region\nEND:VCARD`
 	    })
 	}
-	chika.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
+	bbot.sendMessage(jid, { contacts: { displayName: `${list.length} Kontak`, contacts: list }, ...opts }, { quoted })
     }
     
-    chika.setStatus = (status) => {
-        chika.query({
+    bbot.setStatus = (status) => {
+        bbot.query({
             tag: 'iq',
             attrs: {
                 to: '@s.whatsapp.net',
@@ -153,27 +202,27 @@ async function startchika() {
         return status
     }
 	
-    chika.public = true
+    bbot.public = true
 
-    chika.serializeM = (m) => smsg(chika, m, store)
+    bbot.serializeM = (m) => smsg(bbot, m, store)
 
-    chika.ev.on('connection.update', async (update) => {
+    bbot.ev.on('connection.update', async (update) => {
         const { connection, lastDisconnect } = update	    
         if (connection === 'close') {
         let reason = new Boom(lastDisconnect?.error)?.output.statusCode
-            if (reason === DisconnectReason.badSession) { console.log(`Bad Session File, Please Delete Session and Scan Again`); chika.logout(); }
-            else if (reason === DisconnectReason.connectionClosed) { console.log("Connection closed, reconnecting...."); startchika(); }
-            else if (reason === DisconnectReason.connectionLost) { console.log("Connection Lost from Server, reconnecting..."); startchika(); }
-            else if (reason === DisconnectReason.connectionReplaced) { console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); chika.logout(); }
-            else if (reason === DisconnectReason.loggedOut) { console.log(`Device Logged Out, Please Scan Again And Run.`); chika.logout(); }
-            else if (reason === DisconnectReason.restartRequired) { console.log("Restart Required, Restarting..."); startchika(); }
-            else if (reason === DisconnectReason.timedOut) { console.log("Connection TimedOut, Reconnecting..."); startchika(); }
-            else chika.end(`Unknown DisconnectReason: ${reason}|${connection}`)
+            if (reason === DisconnectReason.badSession) { console.log(`Bad Session File, Please Delete Session and Scan Again`); bbot.logout(); }
+            else if (reason === DisconnectReason.connectionClosed) { console.log("Connection closed, reconnecting...."); startbbot(); }
+            else if (reason === DisconnectReason.connectionLost) { console.log("Connection Lost from Server, reconnecting..."); startbbot(); }
+            else if (reason === DisconnectReason.connectionReplaced) { console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First"); bbot.logout(); }
+            else if (reason === DisconnectReason.loggedOut) { console.log(`Device Logged Out, Please Scan Again And Run.`); bbot.logout(); }
+            else if (reason === DisconnectReason.restartRequired) { console.log("Restart Required, Restarting..."); startbbot(); }
+            else if (reason === DisconnectReason.timedOut) { console.log("Connection TimedOut, Reconnecting..."); startbbot(); }
+            else bbot.end(`Unknown DisconnectReason: ${reason}|${connection}`)
         }
         console.log('Connected...', update)
     })
 
-    chika.ev.on('creds.update', saveState)
+    bbot.ev.on('creds.update', saveState)
 
     // Add Other
     /** Send Button 5 Image
@@ -186,8 +235,8 @@ async function startchika() {
      * @param {*} options
      * @returns
      */
-    chika.send5ButImg = async (jid , text = '' , footer = '', img, but = [], options = {}) =>{
-        let message = await prepareWAMessageMedia({ image: img }, { upload: chika.waUploadToServer })
+    bbot.send5ButImg = async (jid , text = '' , footer = '', img, but = [], options = {}) =>{
+        let message = await prepareWAMessageMedia({ image: img }, { upload: bbot.waUploadToServer })
         var template = generateWAMessageFromContent(m.chat, proto.Message.fromObject({
         templateMessage: {
         hydratedTemplate: {
@@ -198,7 +247,7 @@ async function startchika() {
             }
             }
             }), options)
-            chika.relayMessage(jid, template.message, { messageId: template.key.id })
+            bbot.relayMessage(jid, template.message, { messageId: template.key.id })
     }
 
     /**
@@ -210,7 +259,7 @@ async function startchika() {
      * @param {*} quoted 
      * @param {*} options 
      */
-    chika.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
+    bbot.sendButtonText = (jid, buttons = [], text, footer, quoted = '', options = {}) => {
         let buttonMessage = {
             text,
             footer,
@@ -218,7 +267,7 @@ async function startchika() {
             headerType: 2,
             ...options
         }
-        chika.sendMessage(jid, buttonMessage, { quoted, ...options })
+        bbot.sendMessage(jid, buttonMessage, { quoted, ...options })
     }
     
     /**
@@ -229,7 +278,7 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendText = (jid, text, quoted = '', options) => chika.sendMessage(jid, { text: text, ...options }, { quoted })
+    bbot.sendText = (jid, text, quoted = '', options) => bbot.sendMessage(jid, { text: text, ...options }, { quoted })
 
     /**
      * 
@@ -240,9 +289,9 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendImage = async (jid, path, caption = '', quoted = '', options) => {
+    bbot.sendImage = async (jid, path, caption = '', quoted = '', options) => {
 	let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await chika.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })
+        return await bbot.sendMessage(jid, { image: buffer, caption: caption, ...options }, { quoted })
     }
 
     /**
@@ -254,9 +303,9 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendVideo = async (jid, path, caption = '', quoted = '', gif = false, options) => {
+    bbot.sendVideo = async (jid, path, caption = '', quoted = '', gif = false, options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await chika.sendMessage(jid, { video: buffer, caption: caption, gifPlayback: gif, ...options }, { quoted })
+        return await bbot.sendMessage(jid, { video: buffer, caption: caption, gifPlayback: gif, ...options }, { quoted })
     }
 
     /**
@@ -268,9 +317,9 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
+    bbot.sendAudio = async (jid, path, quoted = '', ptt = false, options) => {
         let buffer = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
-        return await chika.sendMessage(jid, { audio: buffer, ptt: ptt, ...options }, { quoted })
+        return await bbot.sendMessage(jid, { audio: buffer, ptt: ptt, ...options }, { quoted })
     }
 
     /**
@@ -281,7 +330,7 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendTextWithMentions = async (jid, text, quoted, options = {}) => chika.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
+    bbot.sendTextWithMentions = async (jid, text, quoted, options = {}) => bbot.sendMessage(jid, { text: text, contextInfo: { mentionedJid: [...text.matchAll(/@(\d{0,16})/g)].map(v => v[1] + '@s.whatsapp.net') }, ...options }, { quoted })
 
     /**
      * 
@@ -291,7 +340,7 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
+    bbot.sendImageAsSticker = async (jid, path, quoted, options = {}) => {
         let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
@@ -300,7 +349,7 @@ async function startchika() {
             buffer = await imageToWebp(buff)
         }
 
-        await chika.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+        await bbot.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
         return buffer
     }
 
@@ -312,7 +361,7 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
+    bbot.sendVideoAsSticker = async (jid, path, quoted, options = {}) => {
         let buff = Buffer.isBuffer(path) ? path : /^data:.*?\/.*?;base64,/i.test(path) ? Buffer.from(path.split`,`[1], 'base64') : /^https?:\/\//.test(path) ? await (await getBuffer(path)) : fs.existsSync(path) ? fs.readFileSync(path) : Buffer.alloc(0)
         let buffer
         if (options && (options.packname || options.author)) {
@@ -321,7 +370,7 @@ async function startchika() {
             buffer = await videoToWebp(buff)
         }
 
-        await chika.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
+        await bbot.sendMessage(jid, { sticker: { url: buffer }, ...options }, { quoted })
         return buffer
     }
 	
@@ -332,7 +381,7 @@ async function startchika() {
      * @param {*} attachExtension 
      * @returns 
      */
-    chika.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
+    bbot.downloadAndSaveMediaMessage = async (message, filename, attachExtension = true) => {
         let quoted = message.msg ? message.msg : message
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
@@ -348,7 +397,7 @@ async function startchika() {
         return trueFileName
     }
 
-    chika.downloadMediaMessage = async (message) => {
+    bbot.downloadMediaMessage = async (message) => {
         let mime = (message.msg || message).mimetype || ''
         let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
         const stream = await downloadContentFromMessage(message, messageType)
@@ -370,8 +419,8 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
-        let types = await chika.getFile(path, true)
+    bbot.sendMedia = async (jid, path, fileName = '', caption = '', quoted = '', options = {}) => {
+        let types = await bbot.getFile(path, true)
            let { mime, ext, res, data, filename } = types
            if (res && res.status !== 200 || file.length <= 65536) {
                try { throw { json: JSON.parse(file.toString()) } }
@@ -391,7 +440,7 @@ async function startchika() {
        else if (/video/.test(mime)) type = 'video'
        else if (/audio/.test(mime)) type = 'audio'
        else type = 'document'
-       await chika.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options })
+       await bbot.sendMessage(jid, { [type]: { url: pathFile }, caption, mimetype, fileName, ...options }, { quoted, ...options })
        return fs.promises.unlink(pathFile)
        }
 
@@ -403,7 +452,7 @@ async function startchika() {
      * @param {*} options 
      * @returns 
      */
-    chika.copyNForward = async (jid, message, forceForward = false, options = {}) => {
+    bbot.copyNForward = async (jid, message, forceForward = false, options = {}) => {
         let vtype
 		if (options.readViewOnce) {
 			message.message = message.message && message.message.ephemeralMessage && message.message.ephemeralMessage.message ? message.message.ephemeralMessage.message : (message.message || undefined)
@@ -434,11 +483,11 @@ async function startchika() {
                 }
             } : {})
         } : {})
-        await chika.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
+        await bbot.relayMessage(jid, waMessage.message, { messageId:  waMessage.key.id })
         return waMessage
     }
 
-    chika.cMod = (jid, copy, text = '', sender = chika.user.id, options = {}) => {
+    bbot.cMod = (jid, copy, text = '', sender = bbot.user.id, options = {}) => {
         //let copy = message.toJSON()
 		let mtype = Object.keys(copy.message)[0]
 		let isEphemeral = mtype === 'ephemeralMessage'
@@ -459,17 +508,18 @@ async function startchika() {
 		if (copy.key.remoteJid.includes('@s.whatsapp.net')) sender = sender || copy.key.remoteJid
 		else if (copy.key.remoteJid.includes('@broadcast')) sender = sender || copy.key.remoteJid
 		copy.key.remoteJid = jid
-		copy.key.fromMe = sender === chika.user.id
+		copy.key.fromMe = sender === bbot.user.id
 
         return proto.WebMessageInfo.fromObject(copy)
     }
+
 
     /**
      * 
      * @param {*} path 
      * @returns 
      */
-    chika.getFile = async (PATH, save) => {
+    bbot.getFile = async (PATH, save) => {
         let res
         let data = Buffer.isBuffer(PATH) ? PATH : /^data:.*?\/.*?;base64,/i.test(PATH) ? Buffer.from(PATH.split`,`[1], 'base64') : /^https?:\/\//.test(PATH) ? await (res = await getBuffer(PATH)) : fs.existsSync(PATH) ? (filename = PATH, fs.readFileSync(PATH)) : typeof PATH === 'string' ? PATH : Buffer.alloc(0)
         //if (!Buffer.isBuffer(data)) throw new TypeError('Result is not a buffer')
@@ -489,10 +539,10 @@ async function startchika() {
 
     }
 
-    return chika
+    return bbot
 }
 
-startchika()
+startbbot()
 
 
 let file = require.resolve(__filename)
