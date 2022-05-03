@@ -2793,6 +2793,23 @@ await m.reply(txt)
 m.reply(lang.err())
 })
 break
+case 'drakor':
+                if (!text) return m.reply('Yang mau di cari apa?')
+                await m.reply(mess.wait)
+                xfar.Drakor(`${text}`).then(async data => {
+                    let txt = `*-----「 DRAKOR-SEARCH 」-----*\n\n`
+                    for (let i of data) {
+                        txt += `*📫 Title :* ${i.judul}\n`
+                        txt += `*📆 Years :* ${i.years}\n`
+                        txt += `*🎥 Genre :* ${i.genre}\n`
+                        txt += `*📚 Url :* ${i.url}\n-----------------------------------------------------\n`
+                    }
+                    await sendFileFromUrl(from,data[0].thumbnail,txt,m)
+                })
+                .catch((err) => {
+                    m.reply(mess.error)
+                })
+            break
 case 'playstore': case 'apk':
   if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
     db.data.users[m.sender].limit -= 1    
@@ -2808,6 +2825,30 @@ storee += `\n*「 *PLAY STORE* 」*\n
 }
 m.reply(storee)
 break
+case 'manga':
+                if (!text) return m.reply('Yang mau di cari apa?')
+                await m.reply(mess.wait)
+                xfar.Manga(`${text}`).then(async data => {
+                    let txt = `*------「 MANGA-SEARCH 」------*\n\n`
+                    for (let i of data) {
+                         txt += `*📫 Title :* ${i.judul}\n`
+                         txt += `*📚 Url :* ${i.link}\n-----------------------------------------------------\n`
+                    }
+                    let gam = await getBuffer(data[0].thumbnail.replace('https://www.anime-planet.com',''))
+                    var but = [
+				{
+					"urlButton": {
+						"displayText": "Instagram",
+						"url": `${sc}`
+						}
+					}
+				]
+				await chika.send5ButLoc(from, txt , `© ${ownername}`,gam, but , { userJid: m.chat, quoted: m })
+                })
+                .catch((err) => {
+                    m.reply(mess.error)
+                })
+            break
 case 'mediafire':
 if (args.length < 1) return m.reply(`Kirim perintah ${prefix + command} [link]\nContoh : ${prefix + command}  https://www.mediafire.com/file/rniewk7i0zlwoye/bbot.txt/file`)
      m.reply(`「❗」Tunggu Sebentar...`)
