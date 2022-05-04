@@ -94,9 +94,11 @@ return`
 ┌── 「 *Downloader Menu* 」
 ├ ${prefix}tiktokvid [url]
 ├ ${prefix}tiktokaudio [url]
+├ ${prefix}tiktoknowm [url]
 ├ ${prefix}instagram [url]
 ├ ${prefix}twitter [url]
 ├ ${prefix}facebook [url]
+├ ${prefix}likee [url]
 ├ ${prefix}ytmp3 [url]  
 ├ ${prefix}ytmp4 [url]  
 ├ ${prefix}getmusic [query]  
@@ -104,6 +106,7 @@ return`
 ├ ${prefix}umma [url]  
 ├ ${prefix}soundcloud [url] 
 ├ ${prefix}pixiv [id]
+├ ${prefix}konachan [query]
 └───────
 
 ┌── 「 *Search Menu* 」
@@ -113,6 +116,8 @@ return`
 ├ ${prefix}pinterest [query]
 ├ ${prefix}wallpaper [query]
 ├ ${prefix}wikimedia [query]
+├ ${prefix}wikipedia [query]
+├ ${prefix}kbbi [query]
 ├ ${prefix}ytsearch [query]
 ├ ${prefix}ringtone [query]
 ├ ${prefix}brainly [teks]
@@ -120,7 +125,9 @@ return`
 ├ ${prefix}happymod [apk]
 ├ ${prefix}spacksearch [teks]
 ├ ${prefix}gcwasearch [teks]
-├ ${prefix}sfilesearch [file]
+├ ${prefix}sfilesearch [query]
+├ ${prefix}webtoon [query]
+├ ${prefix}pixivsearch [query]
 ├ ${prefix}quotes [teks]
 ├ ${prefix}chordgitar [lagu]
 └───────
