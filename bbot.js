@@ -3453,7 +3453,7 @@ likee = await fetchJson(`https://api.akuari.my.id/downloader/likeedl?link=${q}`)
  video: { url: likee.medias.url },
  caption: `💬 *Judul :* ${likee.title}\n📊 *Durasi :* ${likee.duration}\n✨ *Kualitas :* ${likee.medias.quality}\n\n_Didownload Oleh B-BOT_`,
  buttons: [{buttonId: `${prefix}donasi`, buttonText: { displayText: "Donasi" }, type: 1 }
- footer: `${footer}`
+ footer: 'BBOT'
   }, { quoted: m })
 })
 }
@@ -3469,7 +3469,7 @@ xfar.Tiktok(q).then( data => {
  video: { url: data.medias[0].url },
  caption: `${data.title}\n\n_Didownload Oleh B-BOT_`,
  buttons: [{buttonId: `${prefix}tiktoknowm ${args[0]} ${m.sender}`, buttonText: { displayText: "No Watermark" }, type: 1 },{buttonId: `${prefix}tiktokaudio ${args[0]} ${m.sender}`, buttonText: { displayText: "Audio" }, type: 1 },{buttonId: `${prefix}donasi`, buttonText: { displayText: "Donasi" }, type: 1 }],
- footer: `${footer}`
+ footer: 'BBOT'
   }, { quoted: m })
 })
 }
