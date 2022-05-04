@@ -792,9 +792,11 @@ case 'downloadmenu':
 m.reply(`┌── 「 *Downloader Menu* 」
 ├ ${prefix}tiktokvid [url]
 ├ ${prefix}tiktokaudio [url]
+├ ${prefix}tiktoknowm [url]
 ├ ${prefix}instagram [url]
 ├ ${prefix}twitter [url]
 ├ ${prefix}facebook [url]
+├ ${prefix}likee [url]
 ├ ${prefix}ytmp3 [url]  
 ├ ${prefix}ytmp4 [url]  
 ├ ${prefix}getmusic [query]  
@@ -802,6 +804,7 @@ m.reply(`┌── 「 *Downloader Menu* 」
 ├ ${prefix}umma [url]  
 ├ ${prefix}soundcloud [url] 
 ├ ${prefix}pixiv [id]
+├ ${prefix}konachan [query]
 └───────`)
 break
 case 'searchmenu':
@@ -812,6 +815,8 @@ m.reply(`┌── 「 *Search Menu* 」
 ├ ${prefix}pinterest [query]
 ├ ${prefix}wallpaper [query]
 ├ ${prefix}wikimedia [query]
+├ ${prefix}wikipedia [query]
+├ ${prefix}kbbi [query]
 ├ ${prefix}ytsearch [query]
 ├ ${prefix}ringtone [query]
 ├ ${prefix}brainly [teks]
@@ -819,7 +824,9 @@ m.reply(`┌── 「 *Search Menu* 」
 ├ ${prefix}happymod [apk]
 ├ ${prefix}spacksearch [teks]
 ├ ${prefix}gcwasearch [teks]
-├ ${prefix}sfilesearch [file]
+├ ${prefix}sfilesearch [query]
+├ ${prefix}webtoon [query]
+├ ${prefix}pixivsearch [query]
 ├ ${prefix}quotes [teks]
 ├ ${prefix}chordgitar [lagu]
 └───────`)
@@ -2568,6 +2575,23 @@ db.data.users[m.sender].limit -= 1
 m.reply(`「❗」Tunggu Sebentar...`)
 bbot.sendMessage(m.chat, { image: { url: `https://api.akuari.my.id/downloader/pixiv?id=${q}&ext=.jpg`}, caption: `「✅」Sukses` }, { quoted: m })
 break
+case 'konachan': {
+if(!isPremium) return m.reply(mess.premium)
+if (!q) return m.reply(`Ketik ${prefix + command} [query]\nContoh : ${prefix + command} genshin`) 
+m.reply(`「❗」Tunggu Sebentar...`)
+let buttons = [
+                    {buttonId: `!konachan ${q}`, buttonText: {displayText: 'Next Image'}, type: 1}
+                ]
+                let buttonMessage = {
+                    image: { url: `https://api.akuari.my.id/search/konachan?query=${q}` },
+                    caption: `_Didownload Oleh BBOT_`,
+                    footer: ${footer},
+                    buttons: buttons,
+                    headerType: 4
+                }
+                bbot.sendMessage(m.chat, buttonMessage, { quoted: m })
+            }
+            break
 case 'tulis': case 'nulis':
 if (!q) return m.reply(`Ketik ${prefix + command} [teks]\nContoh : ${prefix + command} bbot`) 
 db.data.users[m.sender].limit -= 1
@@ -2773,6 +2797,15 @@ case 'nekonime':
     teks = `_*Otakudesu*_ 🌱\n\n💬 *Title* : ${i.judul}\n🔰 *Title Jepang* : ${i.jepang}\n💢 *Genre* : ${i.genre}\n🎨 *Produser* : ${i.produser}\n🌱 *Status* : ${i.status}\n📺 *Episode* : ${i.episode}\n📈 Durasi : ${i.durasi}\n🐣 *Rilis* : ${i.rilis}\n🎙 *Studio* : ${i.studio}\n✨ *Rate* : ${i.rate}\n⚜ *Description* : ${i.desc}\n\n📩 *DOWNLOAD*\n⚜ *Batch* : ${i.batch}\n⚜ *Batch SD* ${i.batchSD}\n⚜ *Batch HD* : ${i.batchHD}`
     m.reply(teks) 
   break
+case 'pixivsearch':
+      if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
+    db.data.users[m.sender].limit -= 1    
+    if (!q) return m.reply(`Ketik ${prefix + command} [judul anime]\nContoh : ${prefix + command} boruto`) 
+    m.reply(`「❗」Tunggu Sebentar...`)
+    i = await fetchJson(`https://api.akuari.my.id/search/pixiv?query=${q}`)
+    teks = `_*Pixiv*_ 🌱\n\n💬 *Title* : ${i.result.title}\n👤 *Author* : ${i.result.author}\n✅ *ID* : ${i.result.pid}\n🎨 *Width* : ${i.result.width}\n🎨 *Height* : ${i.result.height}\n🌱 *Tags* : ${i.result.tags}\n🔗 *URL :* ${i.result.urls}\n\n`
+    m.reply(teks) 
+  break
 case 'webtonsearch': case 'webtoon':
   if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
     db.data.users[m.sender].limit -= 1    
@@ -2914,6 +2947,7 @@ let buttons = [
                 bbot.sendMessage(m.chat, buttonMessage, { quoted: m })
             }
             break
+
             case 'quotesanime': case 'quoteanime': {
             	if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
 db.data.users[m.sender].limit -= 1
@@ -3408,6 +3442,22 @@ if (!q) m.reply(`Kirim perintah ${prefix + command} [link]`)
    } catch { reply('err') }
   }
   break
+case 'likee': 
+case 'likeedl':{
+	if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
+db.data.users[m.sender].limit -= 1
+if (!q) m.reply(`Kirim perintah ${prefix + command} [link]`)
+m.reply(`「❗」Tunggu Sebentar...`)
+likee = await fetchJson(`https://api.akuari.my.id/downloader/likeedl?link=${q}`)
+  bbot.sendMessage(m.chat, {
+ video: { url: likee.medias.url },
+ caption: `💬 *Judul :* ${likee.title}\n📊 *Durasi :* ${likee.duration}\n✨ *Kualitas :* ${likee.medias.quality}\n\n_Didownload Oleh B-BOT_`,
+ buttons: [{buttonId: `${prefix}donasi`, buttonText: { displayText: "Donasi" }, type: 1 }
+ footer: `${footer}`
+  }, { quoted: m })
+})
+}
+break
 case 'tiktok': 
 case 'tiktokvid':{
 	if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
