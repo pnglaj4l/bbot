@@ -2585,7 +2585,7 @@ let buttons = [
                 let buttonMessage = {
                     image: { url: `https://api.akuari.my.id/search/konachan?query=${q}` },
                     caption: `_Didownload Oleh BBOT_`,
-                    footer: ${footer},
+                    footer: `${footer}`,
                     buttons: buttons,
                     headerType: 4
                 }
