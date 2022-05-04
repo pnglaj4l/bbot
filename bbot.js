@@ -3442,22 +3442,6 @@ if (!q) m.reply(`Kirim perintah ${prefix + command} [link]`)
    } catch { reply('err') }
   }
   break
-case 'likee': 
-case 'likeedl':{
-	if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
-db.data.users[m.sender].limit -= 1
-if (!q) m.reply(`Kirim perintah ${prefix + command} [link]`)
-m.reply(`「❗」Tunggu Sebentar...`)
-likee = await fetchJson(`https://api.akuari.my.id/downloader/likeedl?link=${q}`)
-  bbot.sendMessage(m.chat, {
- video: { url: likee.medias.url },
- caption: `💬 *Judul :* ${likee.title}\n📊 *Durasi :* ${likee.duration}\n✨ *Kualitas :* ${likee.medias.quality}\n\n_Didownload Oleh B-BOT_`,
- buttons: [{buttonId: `${prefix}donasi`, buttonText: { displayText: "Donasi" }, type: 1 }
- footer: pushname
-  }, { quoted: m })
-})
-}
-break
 case 'tiktok': 
 case 'tiktokvid':{
 	if (!isPremium && global.db.data.users[m.sender].limit < 1) return m.reply('「*ERROR*」\n\nMaaf, limit harian anda telah habis! Limit akan dereset pada pukul 00.00\nMau unlimited limit? ketik ${prefix}unlimited')
